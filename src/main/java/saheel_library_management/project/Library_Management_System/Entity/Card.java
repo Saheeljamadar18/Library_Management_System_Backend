@@ -26,12 +26,12 @@ public class Card {
     private CardStatus cardStatus;
     @Column(name = "expiry_date",nullable = false)
     private String expiryDate;
-    @Column(name = "created_Date",nullable = false)
+    @Column(name = "created_date", nullable = false)
     @CreationTimestamp
     private Date createdDate;
-    @Column(name = "updated_Date",nullable = false)
+    @Column(name = "updated_date", nullable = false)
     @UpdateTimestamp
-    private Date  updatedDate;
+    private Date updatedDate;
     @JsonBackReference("student-card")
     @OneToOne
     @JoinColumn(name = "student_id")
