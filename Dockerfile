@@ -1,20 +1,11 @@
-# Build stage
-FROM eclipse-temurin:21-jdk AS build
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
-
-COPY mvnw .
-COPY .mvn .mvn
 COPY pom.xml .
-COPY src src
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-RUN chmod +x mvnw && ./mvnw -q -DskipTests package
-
-# Run stage
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-
-COPY --from=build /app/target/Library_Management_System-*.jar app.jar
-
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 7777
-
 ENTRYPOINT ["java", "-jar", "app.jar"]
