@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: library-management-system-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /dashboard/apis/stats
+    envVars:
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: SPRING_SQL_INIT_MODE
+        value: always
+      - key: SPRING_JPA_DEFER_DATASOURCE_INITIALIZATION
+        value: "true"
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
