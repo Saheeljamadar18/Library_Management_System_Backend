@@ -14,11 +14,11 @@ public class Transaction {
     @Column(name = "id", nullable = false)
     private int id;
 
-    @Column(name = "transactionDate", nullable = false)
+    @Column(name = "transaction_date", nullable = false)
     @CreationTimestamp
     private Date transactiondate;
 
-    @Column(name = "dueDate")
+    @Column(name = "due_date")
     private String dueDate;
 
     @Enumerated(EnumType.STRING)

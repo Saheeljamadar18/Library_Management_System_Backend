@@ -40,6 +40,19 @@ docker compose down -v
 
 Inside Docker, the API connects to MySQL at hostname `mysql` (not `localhost`).
 
+## Deploy on Render (production MySQL)
+
+Set these environment variables on the Render web service:
+
+| Variable | Example |
+|----------|---------|
+| `DB_URL` | `jdbc:mysql://your-host:3306/sql8827716` |
+| `DB_USERNAME` | your MySQL user |
+| `DB_PASSWORD` | your MySQL password |
+| `SPRING_JPA_HIBERNATE_DDL_AUTO` | `update` (do **not** use `none` or `validate` on an empty DB) |
+
+On first startup the app runs `schema.sql` and creates `student`, `author`, `books`, `card`, and `transaction` if the database is empty.
+
 ## Run locally (without Docker)
 
 1. Start MySQL with database `student_lib`
