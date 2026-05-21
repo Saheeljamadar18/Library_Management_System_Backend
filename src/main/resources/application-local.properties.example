@@ -1,0 +1,4 @@
+# Copy to application-local.properties and override values (keep out of git)
+DB_URL=jdbc:mysql://localhost:3306/student_lib
+DB_USERNAME=root
+DB_PASSWORD=your_password_here
