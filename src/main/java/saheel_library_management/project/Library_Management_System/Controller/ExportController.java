@@ -1,6 +1,8 @@
 package saheel_library_management.project.Library_Management_System.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import saheel_library_management.project.Library_Management_System.Service.ExportService;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -20,7 +21,7 @@ public class ExportController {
     private ExportService exportService;
 
     @GetMapping("/{entity}")
-    public ResponseEntity<Map<String, String>> exportData(@PathVariable String entity, @RequestParam String format) {
+    public ResponseEntity<?> exportData(@PathVariable String entity, @RequestParam String format) {
         try {
             byte[] data;
             String fileName;
@@ -66,10 +67,10 @@ public class ExportController {
                 return ResponseEntity.badRequest().body(Map.of("error", "Unsupported entity"));
             }
 
-            String s3Url = exportService.uploadToS3AndGetUrl(data, fileName, contentType);
-            Map<String, String> response = new HashMap<>();
-            response.put("url", s3Url);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(data);
 
         } catch (Exception e) {
             e.printStackTrace();

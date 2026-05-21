@@ -86,12 +86,13 @@ public class ExportService {
         List<Transaction> transactions = transactionRepository.findAll();
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              CSVWriter writer = new CSVWriter(new OutputStreamWriter(baos))) {
-            writer.writeNext(new String[]{"ID", "Status", "Issue Date", "Return Date", "Fine", "Operation", "Book ID", "Card ID"});
+            writer.writeNext(new String[]{"ID", "Type", "Transaction Date", "Due Date", "Book ID", "Card ID"});
             for (Transaction t : transactions) {
                 writer.writeNext(new String[]{
-                        String.valueOf(t.getTransactionId()), t.getTransactionStatus().name(),
-                        String.valueOf(t.getIssueDate()), String.valueOf(t.getReturnDate()),
-                        String.valueOf(t.getFine()), String.valueOf(t.isIssueOperation()),
+                        String.valueOf(t.getId()),
+                        t.getTransactionType() != null ? t.getTransactionType().name() : "",
+                        t.getTransactiondate() != null ? String.valueOf(t.getTransactiondate()) : "",
+                        t.getDueDate() != null ? t.getDueDate() : "",
                         t.getBook() != null ? String.valueOf(t.getBook().getBook_id()) : "",
                         t.getCard() != null ? String.valueOf(t.getCard().getId()) : ""
                 });
@@ -161,15 +162,16 @@ public class ExportService {
             document.add(new Paragraph("Transactions List"));
             document.add(new Paragraph(" "));
 
-            PdfPTable table = new PdfPTable(8);
+            PdfPTable table = new PdfPTable(6);
             table.setWidthPercentage(100);
-            table.addCell("ID"); table.addCell("Status"); table.addCell("Issue Date"); table.addCell("Return Date");
-            table.addCell("Fine"); table.addCell("Operation"); table.addCell("Book ID"); table.addCell("Card ID");
+            table.addCell("ID"); table.addCell("Type"); table.addCell("Transaction Date");
+            table.addCell("Due Date"); table.addCell("Book ID"); table.addCell("Card ID");
 
             for (Transaction t : transactions) {
-                table.addCell(String.valueOf(t.getTransactionId())); table.addCell(t.getTransactionStatus().name());
-                table.addCell(String.valueOf(t.getIssueDate())); table.addCell(String.valueOf(t.getReturnDate()));
-                table.addCell(String.valueOf(t.getFine())); table.addCell(String.valueOf(t.isIssueOperation()));
+                table.addCell(String.valueOf(t.getId()));
+                table.addCell(t.getTransactionType() != null ? t.getTransactionType().name() : "");
+                table.addCell(t.getTransactiondate() != null ? String.valueOf(t.getTransactiondate()) : "");
+                table.addCell(t.getDueDate() != null ? t.getDueDate() : "");
                 table.addCell(t.getBook() != null ? String.valueOf(t.getBook().getBook_id()) : "");
                 table.addCell(t.getCard() != null ? String.valueOf(t.getCard().getId()) : "");
             }

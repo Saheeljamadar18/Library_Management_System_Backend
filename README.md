@@ -47,8 +47,12 @@ Inside Docker, the API connects to MySQL at hostname `mysql` (not `localhost`).
 3. Run:
 
 ```bash
+# Requires Java 21 (class file version 65)
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
 ./mvnw spring-boot:run
 ```
+
+Verify API: `curl http://localhost:7777/dashboard/apis/stats`
 
 ## Frontend
 

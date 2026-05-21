@@ -3,6 +3,7 @@ package saheel_library_management.project.Library_Management_System.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 import saheel_library_management.project.Library_Management_System.Converter.BookConverter;
 import saheel_library_management.project.Library_Management_System.Entity.Author;
@@ -94,9 +95,11 @@ public class BookService {
 
     public List<Books> getBookByPagination(int pageNo, int pageSize, String sortBy, String sortDir) {
         String field = ALLOWED_SORT_FIELDS.contains(sortBy) ? sortBy : "book_id";
-        Sort sort = "desc".equalsIgnoreCase(sortDir)
-                ? Sort.by(field).descending()
-                : Sort.by(field).ascending();
+        // book_id contains underscore; plain Sort.by() treats it as nested path "book.id"
+        Sort.Direction direction = "desc".equalsIgnoreCase(sortDir)
+                ? Sort.Direction.DESC
+                : Sort.Direction.ASC;
+        Sort sort = JpaSort.unsafe(direction, field);
         return bookRepository.findAll(PageRequest.of(pageNo, pageSize, sort)).getContent();
     }
 
